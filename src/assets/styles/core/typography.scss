@@ -23,8 +23,12 @@ input,
 textarea,
 button,
 select {
-  -webkit-font-smoothing: antialiased;
   text-size-adjust: 100%;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a:focus {

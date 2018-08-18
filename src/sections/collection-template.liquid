@@ -1,0 +1,236 @@
+<div class="collections" data-section-id="{{ section.id }}" data-section-type="collection-template">
+  <header class="collection-header">
+    {% if section.settings.show_collection_image and collection.image or
+      collection.handle == 'all' and section.settings.all_banner_image  %}
+      <div class="collection-hero">
+        {% if collection.handle == 'all' %}
+          {% assign image_src = section.settings.all_banner_image %}
+        {% else %}
+          {% assign image_src = collection.image %}
+        {% endif %}
+
+
+        <div class="collection-hero__image ratio-container lazyload js"
+            data-bgset="{% include 'bgset', image: image_src %}"
+            data-sizes="auto"
+            data-parent-fit="cover"
+            style="background-image: url('{{ image_src | img_url: '300x300' }});"></div>
+        <noscript>
+          <div class="collection-hero__image" style="background-image: url({{ image_src | img_url: '2048x600', crop: 'top' }});"></div>
+        </noscript>
+      </div>
+    {% endif %}
+
+    <div class="title-container">
+      <div class="inner">
+        <h2 class="page-title">
+          Shop -
+          {% if collection.handle == 'all' %}
+            All
+          {% else %}
+            {{ collection.title }}
+          {% endif %}
+        </h2>
+
+        {% if collection.description != blank %}
+          <div class="collection--desc">
+            {{ collection.description }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if section.settings.tags_enable or section.settings.sort_enable %}
+      <div class="filters-toolbar-wrapper">
+        <div class="container filters-toolbar">
+          {% if section.settings.sort_enable %}
+            <div class="filters-toolbar__item text-right">
+              {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+              <label for="SortBy" class="label--hidden">{{ 'collections.sorting.title' | t }}</label>
+              <select name="SortBy" id="SortBy" class="filters-toolbar__input hidden">
+                {% if sort_by == collection.default_sort_by %}
+                  <option value="title-ascending" selected="selected">{{ 'collections.sorting.title' | t }}</option>
+                  {% if collection.default_sort_by != 'manual' %}
+                    <option value="manual"{% if sort_by == "manual" %} selected="selected"{% endif %}>{{ 'collections.sorting.featured' | t }}</option>
+                  {% endif %}
+                  {% if collection.default_sort_by != 'best-selling' %}
+                    <option value="best-selling"{% if sort_by == "best-selling" %} selected="selected"{% endif %}>{{ 'collections.sorting.best_selling' | t }}</option>
+                  {% endif %}
+                  {% if collection.default_sort_by != 'title-ascending' %}
+                    <option value="title-ascending"{% if sort_by == "title-ascending"  %}selected="selected"{% endif %}>{{ 'collections.sorting.az' | t }}</option>
+                  {% endif %}
+                  {% if collection.default_sort_by != 'title-descending' %}
+                    <option value="title-descending"{% if sort_by == "title-descending" %} selected="selected"{% endif %}>{{ 'collections.sorting.za' | t }}</option>
+                  {% endif %}
+                  {% if collection.default_sort_by != 'price-ascending' %}
+                    <option value="price-ascending"{% if sort_by == "price-ascending" %} selected="selected"{% endif %}>{{ 'collections.sorting.price_ascending' | t }}</option>
+                  {% endif %}
+                  {% if collection.default_sort_by != 'price-descending' %}
+                    <option value="price-descending"{% if sort_by == "price-descending" %} selected="selected"{% endif %}>{{ 'collections.sorting.price_descending' | t }}</option>
+                  {% endif %}
+                  {% if collection.default_sort_by != 'created-descending' %}
+                    <option value="created-descending"{% if sort_by == "created-descending" %} selected="selected"{% endif %}>{{ 'collections.sorting.date_descending' | t }}</option>
+                  {% endif %}
+                  {% if collection.default_sort_by != 'created-ascending' %}
+                    <option value="created-ascending"{% if sort_by == "created-ascending" %} selected="selected"{% endif %}>{{ 'collections.sorting.date_ascending' | t }}</option>
+                  {% endif %}
+                {% else %}
+                  <option value="manual"{% if sort_by == "manual" %} selected="selected"{% endif %}>{{ 'collections.sorting.featured' | t }}</option>
+                  <option value="best-selling"{% if sort_by == "best-selling" %} selected="selected"{% endif %}>{{ 'collections.sorting.best_selling' | t }}</option>
+                  <option value="title-ascending"{% if sort_by == "title-ascending"  %}selected="selected"{% endif %}>{{ 'collections.sorting.az' | t }}</option>
+                  <option value="title-descending"{% if sort_by == "title-descending" %} selected="selected"{% endif %}>{{ 'collections.sorting.za' | t }}</option>
+                  <option value="price-ascending"{% if sort_by == "price-ascending" %} selected="selected"{% endif %}>{{ 'collections.sorting.price_ascending' | t }}</option>
+                  <option value="price-descending"{% if sort_by == "price-descending" %} selected="selected"{% endif %}>{{ 'collections.sorting.price_descending' | t }}</option>
+                  <option value="created-descending"{% if sort_by == "created-descending" %} selected="selected"{% endif %}>{{ 'collections.sorting.date_descending' | t }}</option>
+                  <option value="created-ascending"{% if sort_by == "created-ascending" %} selected="selected"{% endif %}>{{ 'collections.sorting.date_ascending' | t }}</option>
+                {% endif %}
+              </select>
+              {% include 'icon-chevron-down' %}
+              <input id="DefaultSortBy" type="hidden" value="{{ collection.default_sort_by }}">
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </header>
+
+
+  <div class="collection-products">
+    <div class="products-container">
+      <nav id="nav" class="navigation" role="navigation">
+        <ul>
+          {% for link in linklists.sidebar-collections.links %}
+            {% assign title = link.title | handleize %}
+            {% assign handle = collection.handle %}
+
+            <li>
+              <a href="{{ link.url }}" class="{% if title == handle %}active{% endif %}">
+                {{ link.title }}
+                <span class="count">
+                  {{ collections[title].products_count }}
+                </span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+
+      <div class="product-list">
+        {%- assign limit = 12 -%}
+        {% paginate collection.products by limit %}
+          <div class="product-list__products">
+            {% for product in collection.products %}
+              <div class="grid__item grid__item--{{section.id}}">
+                {% include 'product-card' %}
+              </div>
+            {% else %}
+            {% endfor %}
+          </div>
+
+          <div class="pagination">
+            {% if paginate.pages > 1 %}
+              {% include 'pagination' %}
+            {% endif %}
+          </div>
+        {% endpaginate %}
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="collection&#45;products" id="Collection"> -->
+  <!--   <div class="container products&#45;container"> -->
+      {% comment %}
+      {% for product in collection.products %}
+      {% else %}
+        Add default products to help with onboarding for collections/all only.
+
+        The onboarding styles and products are only loaded if the
+        store has no products.
+
+        {% if collection.handle == 'all' and collection.all_vendors.size == 0 and collection.all_types.size == 0 %}
+          <div class="grid__item">
+            <div class="grid grid--uniform">
+              {% for i in (1..limit) %}
+                <div class="grid__item">
+                  <div class="grid-view-item">
+                    <a href="#" class="grid-view-item__link">
+                      <div class="grid-view-item__image">
+                        {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                        {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                      <div class="h4 grid-view-item__title">{{ 'homepage.onboarding.product_title' | t }}</div>
+                      <div class="grid-view-item__meta">
+                        <span class="product-price__price">$19.99</span>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          {%- assign is_empty_collection = true -%}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if is_empty_collection %}
+      <div class="container">
+        <p class="text-center">{{ 'collections.general.no_matches' | t }}</p>
+      </div>
+    {% endif %}
+
+    {% if paginate.pages > 1 %}
+      {% include 'pagination' %}
+    {% endif %}
+        {% endcomment %}
+
+</div>
+
+
+{% schema %}
+  {
+    "name": {
+      "en": "Collection pages",
+      "de": "Kategorie-Seiten",
+      "fr": "Pages de collections"
+    },
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "all_banner_image",
+        "label": "Banner Image - All"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_collection_image",
+        "label": {
+          "en": "Show collection image",
+          "de": "Kategorie-Foto anzeigen",
+          "fr": "Afficher l'image de la collection"
+        },
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "sort_enable",
+        "label": {
+          "en": "Enable sorting",
+          "de": "Sortieren erlauben",
+          "fr": "Activer le tri"
+        },
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "tags_enable",
+        "label": {
+          "en": "Enable tag filtering",
+          "de": "Tag-Filtern erlauben",
+          "fr": "Activer le filtrage par balises"
+        },
+        "default": true
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,73 @@
+.fish-with-bubbles {
+  padding: 0 20px;
+  margin-top: 20px;
+
+  .container {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  @include media-query($medium-up) {
+    .container {
+      max-width: 1120px;
+    }
+  }
+
+  .fish-with-bubbles__text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0 20px;
+    max-width: 780px;
+    margin: 0 auto;
+
+    p {
+      font-size: 18px;
+      margin: 0 0 10px;
+      text-align: center;
+    }
+
+    @include media-query($medium-up) {
+      margin-top: 30px;
+
+      p {
+        font-size: 28px;
+        margin: 0 0 15px;
+      }
+    }
+  }
+
+
+  .fish {
+    margin: 0 auto;
+    width: 100%;
+
+    @include media-query($medium-up) {
+      display: flex;
+      flex-direction: column;
+      max-width: 420px;
+    }
+
+    @include media-query($large-up) {
+      max-width: 500px;
+
+      i.bubbles { width: 22%; }
+    }
+  }
+
+  .bubbles {
+    display: block;
+    transform: rotate(30deg);
+    width: 20%;
+    margin-left: 12%;
+    margin-bottom: -15%;
+  }
+
+  .fishey {
+    display: block;
+    width: 70%;
+    margin: 0 auto;
+  }
+}

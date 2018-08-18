@@ -1,0 +1,39 @@
+{%- comment -%}
+  Theme Store required settings
+  - Text: description of the block
+{%- endcomment -%}
+
+<section class="fish-with-bubbles">
+  <div class="container">
+    <div class="fish-with-bubbles__text">
+      {% if section.settings.text != blank %}
+        {{ section.settings.text }}
+      {% endif %}
+    </div>
+
+    <div class="fish">
+      <i class="bubbles">{% include 'bubbles' %}</i>
+      <i class="fishey">{% include 'fishe4' %}</i>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Fish with bubbles",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Fish with bubbles",
+        "category": "Text"
+      }
+    ]
+  }
+{% endschema %}

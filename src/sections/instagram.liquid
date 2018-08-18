@@ -1,0 +1,29 @@
+<div class="instagram-feed">
+  <div class="container">
+    <h2 class="title">
+      {{ section.settings.instagram_title | escape }}
+      <i class="paint">{% include 'banner' %}</i>
+    </h2>
+    <div id="insta-feed"></div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Instagram Feed",
+    "settings": [
+      {
+        "type": "text",
+        "id": "instagram_title",
+        "label": "Instagram title",
+        "default": "Instagram"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Instagram Feed",
+        "category": "Image"
+      }
+    ]
+  }
+{% endschema %}

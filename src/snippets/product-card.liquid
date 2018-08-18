@@ -1,0 +1,37 @@
+<a href="{{ product.url | within: collection }}">
+  <div class="product__image">
+    {% include 'responsive-image' with
+    image: product.featured_image,
+    max_width: 700,
+    max_height: 800
+    %}
+  </div>
+
+  <div class="product__info">
+    <div class="product__title">
+      {{ product.title }}
+    </div>
+
+    <div class="product__price">
+      {% if product.compare_at_price > product.price %}
+        {% if product.price_varies %}
+          {%- assign sale_price = product.price | money -%}
+          {{ 'products.product.on_sale_from_html' | t: price: sale_price }}
+        {% else %}
+          {{ 'products.product.on_sale' | t }}
+          {{ product.price | money }}
+        {% endif %}
+
+      {% else %}
+
+        {% if product.price_varies %}
+          {%- assign price = product.price | money -%}
+          {{ 'products.product.from_text_html' | t: price: price }}
+        {% else %}
+          {{ product.price | money }}
+        {% endif %}
+
+      {% endif %}
+    </div>
+  </div>
+</a>
