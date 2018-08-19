@@ -1,0 +1,113 @@
+<header class="header {{template.name}}" role="banner" id="header">
+  <div class="container">
+    <a href="/" class="logo-image">
+      {% capture image_size %}{{ section.settings.logo_max_width }}x{% endcapture %}
+      <img src="{{ section.settings.logo | img_url: image_size }}"
+           srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x"
+           alt="{{ section.settings.logo.alt | default: shop.name }}">
+    </a>
+
+    {%- unless template.name == 'password' -%}
+    <div class="shop-nav">
+      <button type="button" class="shop-nav__button shop-nav__search">
+        {% include 'icon-search' %}
+      </button>
+
+      {% if shop.customer_accounts_enabled %}
+        <ul>
+          {% if customer %}
+            <li>
+              {% if customer.first_name != blank %}
+                {% capture first_name %}<a href="/account">{{ customer.first_name }}</a>{% endcapture %}
+                {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}
+              {% else %}
+                <a href="/account">{{ 'layout.customer.account' | t }}</a>
+              {% endif %}
+            </li>
+            <li>
+              {{ 'layout.customer.log_out' | t | customer_logout_link }}
+            </li>
+          {% else %}
+            <li>
+              {{ 'layout.customer.log_in' | t | customer_login_link }}
+            </li>
+            <li>
+              {{ 'layout.customer.create_account' | t | customer_register_link }}
+            </li>
+          {% endif %}
+        </ul>
+      {% endif %}
+
+      <a href="/cart" class="shop-nav__button shop-nav__cart">
+        {% include 'icon-cart' %}
+
+        {% if cart.item_count > 0 %}
+          <div id="CartCount" class="site-header__cart-count">
+            <span>{{ cart.item_count }}</span>
+            <span class="icon__fallback-text medium-up--hide">{{ 'layout.cart.items_count' | t: count: cart.item_count }}</span>
+          </div>
+        {% endif %}
+      </a>
+    </div>
+    {%- endunless -%}
+
+    <div class="shop-name">
+      t       <h1>{{ shop.name }}</h1>
+      <i class="paint">{% include 'banner' %}</i>
+      <i class="splatter">{% include 'splatter' %}</i>
+    </div>
+
+    <nav id="nav" class="navigation" role="navigation">
+      <div class="mousey">
+        {% include 'amaze' %}
+      </div>
+
+      <ul>
+        {% for link in linklists[section.settings.menu].links %}
+          {% if link.links != blank %}
+            <li>
+              <a href="{{ link.url }}">
+                {{ link.title }}
+                {% include 'icon-arrow-down' %}
+              </a>
+              <ul>
+                {% for childlink in link.links %}
+                  <li>
+                    <a href="{{ childlink.url }}">
+                      {{ childlink.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% else %}
+            <li>
+              <a href="{{ link.url }}">
+                {{ link.title }}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+
+    {%- comment -%}
+    <form action="/search" method="get" role="search">
+      <label for="Search" class="label-hidden">
+        {{ 'general.search.placeholder' | t }}
+      </label>
+
+      <input type="search"
+             name="q"
+             id="Search"
+             value="{{ search.terms | escape }}"
+             placeholder="{{ 'general.search.placeholder' | t }}">
+
+      <button type="submit" class="button">
+        {% include 'icon-search' %}
+        <span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span>
+      </button>
+    </form>
+    {%- endcomment -%}
+  </div>
+</header>

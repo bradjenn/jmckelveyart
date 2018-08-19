@@ -12,6 +12,23 @@
   }
 }
 
+.header-home {
+  background-color: #0f7573;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .logo-image {
+    display: block;
+    width: 200px;
+    background: #fff;
+
+    svg {
+    }
+  }
+}
+
 .header:not(.index):not(.password) {
   padding: 20px;
 
